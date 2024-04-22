@@ -1,0 +1,21 @@
+---
+- name: Deploy Lamp with Laravel Application
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: copy the lamsetup script to slave server
+    copy:
+      src: /home/vagrant/lampsetup.sh
+      dest: /home/vagrant/exam/lampsetup.sh
+      mode: 0755
+
+  - name: Execute the Bash script
+    command: /home/vagrant/exam/lampsetup.sh
+
+  - name: Add cronjob for the server uptime
+    cron:
+      name: "server_uptime"
+      minute: "{{ 0 }}"
+      hour: "{{ 0 }}"
+      job: "/usr/bin/uptime >> /var/log/server_uptime.log"
